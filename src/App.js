@@ -29,6 +29,7 @@ let tempTodoDataArray = [
 function App() {
   const [ todoArray, setTodoArray ] = useState(tempTodoDataArray);
 
+  // addTodo will go to TodoInput
   function addTodo(todo) {
     let newAddedTodoArray = [
       ...todoArray,
@@ -41,6 +42,25 @@ function App() {
 
     setTodoArray(newAddedTodoArray)
   };
+
+  // isDone function will go to Todo.js
+  function isComplete(id) {
+    let newArray = todoArray.map((item) =>{
+      if (item.id === id){
+        item.isCompleted = !item.isCompleted;
+      }
+      return item;
+    })
+
+    setTodoArray(newArray);
+  };
+
+  // delete function will go to Todo.js
+  function deleteTodo(id) {
+    let newArray = todoArray.filter(item => item.id !== id);
+
+    setTodoArray(newArray);
+  }
   
   function showTodoInput() {
     return (
@@ -54,7 +74,13 @@ function App() {
   function showTodo() {
     return todoArray.map((item) => {
       return (
-        <TodoContext.Provider key={item.id} value={{ todoItem: item }}>
+        <TodoContext.Provider 
+          key={item.id} 
+          value={{ 
+            todoItem: item, 
+            isComplete, 
+            deleteTodo,
+          }}>
           <Todo />
         </TodoContext.Provider>
         
