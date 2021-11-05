@@ -4,7 +4,8 @@ import {TodoContext} from "../../context/context";
 function Todo() {
 
    const {
-      todoItem: { id, todo, isCompleted },
+      todoItem: { todo, isCompleted },
+      index,
       isComplete,
       deleteTodo,
    } =useContext(TodoContext);
@@ -14,8 +15,8 @@ function Todo() {
          <span style={{textDecoration: isCompleted && "line-through"}}>
             {todo}
          </span>
-         <button onClick={() => isComplete(id)}>Done</button>
-         <button onClick={() => deleteTodo(id)}>Delete</button>
+         <button onClick={() => isComplete(index)}>Done</button>
+         <button onClick={() => deleteTodo(index)}>Delete</button>
       </div>
    )
 }

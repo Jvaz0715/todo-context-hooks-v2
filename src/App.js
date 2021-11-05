@@ -43,25 +43,49 @@ function App() {
     setTodoArray(newAddedTodoArray)
   };
 
-  // isDone function will go to Todo.js
-  function isComplete(id) {
-    let newArray = todoArray.map((item) =>{
-      if (item.id === id){
-        item.isCompleted = !item.isCompleted;
-      }
-      return item;
-    })
+  // isDone function will go to Todo.js, the map way is fine but is outdated for larger data
+  // function isComplete(id) {
+  //   let newArray = todoArray.map((item) =>{
+  //     if (item.id === id){
+  //       item.isCompleted = !item.isCompleted;
+  //     }
+  //     return item;
+  //   })
 
-    setTodoArray(newArray);
+  //   setTodoArray(newArray);
+  // };
+
+  // // delete function will go to Todo.js
+  // function deleteTodo(id) {
+  //   let newArray = todoArray.filter(item => item.id !== id);
+
+  //   setTodoArray(newArray);
+  // };
+  
+  // a more efficient way to handle toggling complete
+  function isComplete(index) {
+    let newArray = [...todoArray];
+    // if you just set todoArray to array, you will not see auto update
+    // best to declare newArray spread the old array then set the todoArray to the new mutated newArray
+    newArray[index].isCompleted = !newArray[index].isCompleted
+    setTodoArray(newArray)
   };
 
-  // delete function will go to Todo.js
-  function deleteTodo(id) {
-    let newArray = todoArray.filter(item => item.id !== id);
+  // function deleteTodo(index) {
+  //   let newArray = [...todoArray];
+  //   newArray.splice(index, 1);
 
-    setTodoArray(newArray);
+  //   setTodoArray(newArray)
+  // };
+
+  // similar to spread
+  function deleteTodo(index) {
+    let newArray = Object.assign([], todoArray);
+    newArray.splice(index, 1);
+
+    setTodoArray(newArray)
   }
-  
+
   function showTodoInput() {
     return (
       <TodoInputContext.Provider value={{ addTodo }}>
@@ -72,12 +96,13 @@ function App() {
   };
 
   function showTodo() {
-    return todoArray.map((item) => {
+    return todoArray.map((item, index) => {
       return (
         <TodoContext.Provider 
           key={item.id} 
           value={{ 
             todoItem: item, 
+            index,
             isComplete, 
             deleteTodo,
           }}>
