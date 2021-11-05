@@ -1,5 +1,8 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import {v4 as uuidv4} from "uuid";
+
+import { TodoInputContext, TodoContext } from './context/context';
+
 import TodoInput from './components/Todo/TodoInput';
 import Todo from './components/Todo/Todo';
 
@@ -9,29 +12,55 @@ let tempTodoDataArray = [
   {
     id: uuidv4(),
     todo: "learn react",
+    isCompleted: false,
   },
   {
     id: uuidv4(),
     todo: "Deploy AWS",
+    isCompleted: false,
   },
   {
     id: uuidv4(),
     todo: "Make a wire frame",
+    isCompleted: false,
   }
 ];
 
 function App() {
-  const [todoArray, setTodoArray] = useState(tempTodoDataArray)
+  const [ todoArray, setTodoArray ] = useState(tempTodoDataArray);
+
+  function addTodo(todo) {
+    let newAddedTodoArray = [
+      ...todoArray,
+      {
+        id: uuidv4(),
+        todo,
+        isCompleted: false,
+      },
+    ];
+
+    setTodoArray(newAddedTodoArray)
+  };
   
   function showTodoInput() {
-    return <TodoInput />;
+    return (
+      <TodoInputContext.Provider value={{ addTodo }}>
+        <TodoInput />
+      </TodoInputContext.Provider>
+    )
+    
   };
 
   function showTodo() {
     return todoArray.map((item) => {
-      return <Todo key={item.id}/>;
+      return (
+        <TodoContext.Provider key={item.id} value={{ todoItem: item }}>
+          <Todo />
+        </TodoContext.Provider>
+        
+      );
     })
-  }
+  };
 
   return (
     <div className="App">
