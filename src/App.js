@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {v4 as uuidv4} from "uuid";
 
 import { TodoInputContext, TodoContext } from './context/context';
@@ -8,26 +8,30 @@ import Todo from './components/Todo/Todo';
 
 import './App.css';
 
-let tempTodoDataArray = [
-  {
-    id: uuidv4(),
-    todo: "learn react",
-    isCompleted: false,
-  },
-  {
-    id: uuidv4(),
-    todo: "Deploy AWS",
-    isCompleted: false,
-  },
-  {
-    id: uuidv4(),
-    todo: "Make a wire frame",
-    isCompleted: false,
-  }
-];
+// let tempTodoDataArray = [
+//   {
+//     id: uuidv4(),
+//     todo: "learn react",
+//     isCompleted: false,
+//   },
+//   {
+//     id: uuidv4(),
+//     todo: "Deploy AWS",
+//     isCompleted: false,
+//   },
+//   {
+//     id: uuidv4(),
+//     todo: "Make a wire frame",
+//     isCompleted: false,
+//   }
+// ];
 
 function App() {
-  const [ todoArray, setTodoArray ] = useState(tempTodoDataArray);
+  let initialTodoArray = localStorage.getItem("todos")
+  ? JSON.parse(localStorage.getItem("todos")) 
+  : [];
+
+  const [ todoArray, setTodoArray ] = useState(initialTodoArray);
 
   // addTodo will go to TodoInput
   function addTodo(todo) {
@@ -40,7 +44,7 @@ function App() {
       },
     ];
 
-    setTodoArray(newAddedTodoArray)
+    setTodoArray(newAddedTodoArray);
   };
 
   // isDone function will go to Todo.js, the map way is fine but is outdated for larger data
@@ -112,6 +116,10 @@ function App() {
       );
     })
   };
+
+  useEffect(()=>{
+    localStorage.setItem("todos", JSON.stringify(todoArray))
+  }, [todoArray])
 
   return (
     <div className="App">
